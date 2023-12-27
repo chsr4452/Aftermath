@@ -15,15 +15,18 @@ void AAftermathPlayerController::BeginPlay()
 	Super::BeginPlay();
 	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	Subsystem->AddMappingContext(InputMappingContext,0);
-
-	// bShowMouseCursor = true;
-	// DefaultMouseCursor = EMouseCursor::Default;
+	if(Subsystem)
+	{
+		Subsystem->AddMappingContext(InputMappingContext,0);
+	}
 	
-	// FInputModeGameAndUI InputModeData;
-	// InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	// InputModeData.SetHideCursorDuringCapture(true);
-	// SetInputMode(InputModeData);
+	bShowMouseCursor = true;
+	DefaultMouseCursor = EMouseCursor::Default;
+	
+	FInputModeGameAndUI InputModeData;
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture(true);
+	SetInputMode(InputModeData);
 }
 
 void AAftermathPlayerController::SetupInputComponent()

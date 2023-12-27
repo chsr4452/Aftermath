@@ -4,11 +4,36 @@
 #include "AftermathHUD.h"
 
 #include "AftermathUserWidget.h"
+#include "OverlayWidgetController.h"
 
-void AAftermathHUD::BeginPlay()
+
+UOverlayWidgetController* AAftermathHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
-	Super::BeginPlay();
+	if(OverlayWidgetController == nullptr)
+	{
+		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
+		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		OverlayWidgetController->BindCallBacksToDependencies();
+		return OverlayWidgetController;
+	}
 
-	UAftermathUserWidget* Widget =  CreateWidget<UAftermathUserWidget>(GetWorld(), OverlayWidgetClass);
-	Widget->AddToViewport();
+	return OverlayWidgetController;
+}
+
+void AAftermathHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
+	UAttributeSet* AS)
+{
+	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass not found, pleast fill out BP_HUD"));
+	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass not found, pleast fill out BP_HUD"));
+	
+	UUserWidget* Widget =  CreateWidget<UUserWidget>(GetWorld(), OverlayWidgetClass);
+	OverlayWidget = Cast<UAftermathUserWidget>(Widget);
+	
+	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
+	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
+	
+	OverlayWidget->SetWidgetController(WidgetController);
+	WidgetController->BroadcastInitialValues();
+	// WidgetController->BindCallBacksToDependencies();
+	OverlayWidget->AddToViewport();
 }

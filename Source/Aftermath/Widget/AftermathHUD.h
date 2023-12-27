@@ -6,7 +6,11 @@
 #include "GameFramework/HUD.h"
 #include "AftermathHUD.generated.h"
 
+class UAttributeSet;
+class UAbilitySystemComponent;
+struct FWidgetControllerParams;
 class UAftermathUserWidget;
+class UOverlayWidgetController;
 /**
  * 
  */
@@ -15,11 +19,19 @@ class AFTERMATH_API AAftermathHUD : public AHUD
 {
 	GENERATED_BODY()
 public:
-	virtual void BeginPlay() override;
+	
+	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+
+	UPROPERTY()
+    TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
+private:
+
 	TObjectPtr<UAftermathUserWidget> OverlayWidget;
 	
-private:
 	UPROPERTY(EditAnywhere, Category = "OverlayWidget Setting")
 	TSubclassOf<UAftermathUserWidget> OverlayWidgetClass;
 	
+	UPROPERTY(EditAnywhere, Category = "OverlayWidget Setting")
+	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
 };

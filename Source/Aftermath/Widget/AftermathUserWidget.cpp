@@ -3,8 +3,8 @@
 
 #include "AftermathUserWidget.h"
 
-void UAftermathUserWidget::SetWidgetController(UObject* InInWidgetController)
+void UAftermathUserWidget::SetWidgetController(UObject* InWidgetController)
 {
-	WidgetController = InInWidgetController;
+	WidgetController = InWidgetController;
 	WidgetControllerSet();
 }

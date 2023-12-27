@@ -5,10 +5,12 @@
 
 #include "AbilitySystemComponent.h"
 #include "NavigationSystemTypes.h"
+#include "Aftermath/PlayerController/AftermathPlayerController.h"
 #include "Aftermath/PlayerState/AftermathPlayerState.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Aftermath/Widget/AftermathHUD.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -68,4 +70,18 @@ void AMainCharacter::InitAbilitySystemComponent()
 	AbilitySystemComponent = AftermathPlayerState->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(AftermathPlayerState, this);
 	AttributeSet = AftermathPlayerState->GetAttributeSet();
+
+	if(AAftermathPlayerController* PC =  Cast<AAftermathPlayerController>(GetController()))
+	{
+		AAftermathHUD* HUD = PC->GetHUD<AAftermathHUD>();
+		
+		if(AAftermathHUD* AftermathHUD =  Cast<AAftermathHUD>(HUD))
+		{
+			AftermathHUD->InitOverlay(PC, AftermathPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+		
+        
+	}
+	
+
 }

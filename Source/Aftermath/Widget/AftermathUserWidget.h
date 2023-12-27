@@ -19,8 +19,7 @@ public:
 	TObjectPtr<UObject> WidgetController;
 
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetController(UObject* InInWidgetController);
-
+	void SetWidgetController(UObject* InWidgetController);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
