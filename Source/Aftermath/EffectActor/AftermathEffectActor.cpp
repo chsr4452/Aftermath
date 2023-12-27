@@ -32,6 +32,7 @@ void AAftermathEffectActor::OnBeginOverlap(
 		const UAftermathAttributeSet* AftermathAttributeSet =  Cast<UAftermathAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAftermathAttributeSet::StaticClass()));
 		UAftermathAttributeSet * MutableAftermathAttributeSet = const_cast<UAftermathAttributeSet*>(AftermathAttributeSet);
 		MutableAftermathAttributeSet->SetHealth(AftermathAttributeSet->GetHealth() + 25.f);
+		MutableAftermathAttributeSet->SetMana(AftermathAttributeSet->GetMana() + 5.f);
 		Destroy();
 	
 }

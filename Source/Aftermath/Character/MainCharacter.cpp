@@ -40,7 +40,7 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	UE_LOG(LogTemp, Warning, TEXT("Tick Function"));
+	// UE_LOG(LogTemp, Warning, TEXT("Tick Function"));
 }
 
 void AMainCharacter::BeginPlay()
