@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AftermathEffectActor.generated.h"
 
+class UGameplayEffect;
 class USphereComponent;
 
 UCLASS()
@@ -19,19 +20,25 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	// virtual void BeginPlay() override;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Gameplay|Effect")
+	TSubclassOf<UGameplayEffect> InstantEffect;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Gameplay|Effect")
+	TSubclassOf<UGameplayEffect> DurationEffect;
 private:
-	
 	UPROPERTY(EditAnywhere, Category = "EffectActor")
 	TObjectPtr<USphereComponent> ActorSphere;
 
 	UPROPERTY(EditAnywhere, Category = "EffectActor")
 	TObjectPtr<UStaticMeshComponent> ActorMesh;
 
-	UFUNCTION()
-	void OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor*  OtherActor, UPrimitiveComponent*  OtherComp, int32  OtherBodyIndex, bool  bFromSweep, const FHitResult &  SweepResult);
+	// UFUNCTION()
+	// void OnBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor*  OtherActor, UPrimitiveComponent*  OtherComp, int32  OtherBodyIndex, bool  bFromSweep, const FHitResult &  SweepResult);
+	//
+	// UFUNCTION()
+	// void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	UFUNCTION()
-	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectOnTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 };

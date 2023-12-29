@@ -2,9 +2,10 @@
 
 
 #include "AftermathEffectActor.h"
-
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "EditorDirectories.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
 #include "Components/SphereComponent.h"
 
@@ -22,29 +23,45 @@ AAftermathEffectActor::AAftermathEffectActor()
 }
 
 // Called when the game starts or when spawned
+//
+// void AAftermathEffectActor::OnBeginOverlap(
+// 	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+// 	bool bFromSweep, const FHitResult& SweepResult)
+// {
+// 		IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
+// 	
+// 		const UAftermathAttributeSet* AftermathAttributeSet =  Cast<UAftermathAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAftermathAttributeSet::StaticClass()));
+// 		UAftermathAttributeSet * MutableAftermathAttributeSet = const_cast<UAftermathAttributeSet*>(AftermathAttributeSet);
+// 		MutableAftermathAttributeSet->SetHealth(AftermathAttributeSet->GetHealth() + 25.f);
+// 		MutableAftermathAttributeSet->SetMana(AftermathAttributeSet->GetMana() + 5.f);
+// 		Destroy();
+// 	
+// }
+//
+// void AAftermathEffectActor::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+// 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+// {
+// }
 
-void AAftermathEffectActor::OnBeginOverlap(
-	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-	bool bFromSweep, const FHitResult& SweepResult)
+void AAftermathEffectActor::ApplyEffectOnTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-		IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
-	
-		const UAftermathAttributeSet* AftermathAttributeSet =  Cast<UAftermathAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAftermathAttributeSet::StaticClass()));
-		UAftermathAttributeSet * MutableAftermathAttributeSet = const_cast<UAftermathAttributeSet*>(AftermathAttributeSet);
-		MutableAftermathAttributeSet->SetHealth(AftermathAttributeSet->GetHealth() + 25.f);
-		MutableAftermathAttributeSet->SetMana(AftermathAttributeSet->GetMana() + 5.f);
-		Destroy();
-	
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if(ASC)
+	{
+	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+		
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, ELastDirectory::LEVEL, ContextHandle);
+		if(SpecHandle != nullptr)
+		{
+			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		}
+	}
 }
 
-void AAftermathEffectActor::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
-
-void AAftermathEffectActor::BeginPlay()
-{
-	Super::BeginPlay();
-	ActorSphere->OnComponentBeginOverlap.AddDynamic(this,&AAftermathEffectActor::OnBeginOverlap);
-	ActorSphere->OnComponentEndOverlap.AddDynamic(this,&AAftermathEffectActor::OnEndOverlap);
-}
+// void AAftermathEffectActor::BeginPlay()
+// {
+// 	Super::BeginPlay();
+// 	ActorSphere->OnComponentBeginOverlap.AddDynamic(this,&AAftermathEffectActor::OnBeginOverlap);
+// 	ActorSphere->OnComponentEndOverlap.AddDynamic(this,&AAftermathEffectActor::OnEndOverlap);
+// }
