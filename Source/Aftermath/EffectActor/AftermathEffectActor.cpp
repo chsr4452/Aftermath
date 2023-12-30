@@ -4,6 +4,7 @@
 #include "AftermathEffectActor.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+
 #include "AbilitySystemInterface.h"
 #include "EditorDirectories.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
@@ -18,38 +19,93 @@ AAftermathEffectActor::AAftermathEffectActor()
 	ActorMesh = CreateDefaultSubobject<UStaticMeshComponent>("ActorMesh");
 	SetRootComponent(ActorMesh);
 	
-	ActorSphere = CreateDefaultSubobject<USphereComponent>("ActorSphere");
-	ActorSphere->SetupAttachment(RootComponent);
+	// ActorSphere = CreateDefaultSubobject<USphereComponent>("ActorSphere");
+	// ActorSphere->SetupAttachment(RootComponent);
 }
 
-// Called when the game starts or when spawned
-//
-// void AAftermathEffectActor::OnBeginOverlap(
-// 	UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
-// 	bool bFromSweep, const FHitResult& SweepResult)
-// {
-// 		IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor);
-// 	
-// 		const UAftermathAttributeSet* AftermathAttributeSet =  Cast<UAftermathAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UAftermathAttributeSet::StaticClass()));
-// 		UAftermathAttributeSet * MutableAftermathAttributeSet = const_cast<UAftermathAttributeSet*>(AftermathAttributeSet);
-// 		MutableAftermathAttributeSet->SetHealth(AftermathAttributeSet->GetHealth() + 25.f);
-// 		MutableAftermathAttributeSet->SetMana(AftermathAttributeSet->GetMana() + 5.f);
-// 		Destroy();
-// 	
-// }
-//
-// void AAftermathEffectActor::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-// 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-// {
-// }
+
+void AAftermathEffectActor::OnBeginOverlap(AActor* TargetActor)
+{
+	if(InstantApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, InstantEffectClass);
+	}
+	
+	if(DurationApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, DurationEffectClass);
+	}
+	
+	if(InfiniteApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, InfiniteEffectClass);
+	}
+}
+
+void AAftermathEffectActor::OnEndOverlap(AActor* TargetActor)
+{
+	if(InstantApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, InstantEffectClass);
+	}
+	
+	if(DurationApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, DurationEffectClass);
+	}
+	
+	if(InfiniteApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
+	{
+		ApplyEffectOnTarget(TargetActor, InfiniteEffectClass);
+	}
+	
+	if(InfiniteRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+	{
+		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+		if(TargetASC == nullptr) return;
+		TArray<FActiveGameplayEffectHandle> HandleToRemove;
+		for(auto Handle: ActiveGameplayEffects)
+		{
+			if(Handle.Value == TargetASC)
+			{
+				TargetASC->RemoveActiveGameplayEffect(Handle.Key);
+				HandleToRemove.Add(Handle.Key);
+			}
+		}
+		for(auto Handle: HandleToRemove)
+		ActiveGameplayEffects.FindAndRemoveChecked(Handle);
+	}
+}
 
 void AAftermathEffectActor::ApplyEffectOnTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	if(TargetASC)
+	{
+	FGameplayEffectContextHandle ContextHandle = TargetASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
+		
+		FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ELastDirectory::LEVEL, ContextHandle);
+		if(SpecHandle != nullptr)
+		{
+			FActiveGameplayEffectHandle ActiveGameplayEffect = TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+			const bool bIsInfinite = SpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
+			
+			if(bIsInfinite && InfiniteRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+			{
+				ActiveGameplayEffects.Add(ActiveGameplayEffect, TargetASC);
+			}
+		}
+	}
+}
+
+void AAftermathEffectActor::RemoveEffectOnTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if(ASC)
 	{
-	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
-	ContextHandle.AddSourceObject(this);
+		FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(this);
 		
 		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, ELastDirectory::LEVEL, ContextHandle);
 		if(SpecHandle != nullptr)
@@ -57,6 +113,7 @@ void AAftermathEffectActor::ApplyEffectOnTarget(AActor* TargetActor, TSubclassOf
 			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 		}
 	}
+	
 }
 
 // void AAftermathEffectActor::BeginPlay()
