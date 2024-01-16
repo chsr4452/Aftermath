@@ -34,4 +34,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "OverlayWidget Setting")
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
+
+		
+	UPROPERTY(EditAnywhere, Category = "HealthGlobeWidget Setting")
+	TSubclassOf<UAftermathUserWidget> HealthGlobeClass;
+
 };

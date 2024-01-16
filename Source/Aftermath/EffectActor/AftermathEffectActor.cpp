@@ -85,7 +85,7 @@ void AAftermathEffectActor::ApplyEffectOnTarget(AActor* TargetActor, TSubclassOf
 	FGameplayEffectContextHandle ContextHandle = TargetASC->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 		
-		FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ELastDirectory::LEVEL, ContextHandle);
+		FGameplayEffectSpecHandle SpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, EffectLevel, ContextHandle);
 		if(SpecHandle != nullptr)
 		{
 			FActiveGameplayEffectHandle ActiveGameplayEffect = TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
@@ -107,7 +107,7 @@ void AAftermathEffectActor::RemoveEffectOnTarget(AActor* TargetActor, TSubclassO
 		FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
 		ContextHandle.AddSourceObject(this);
 		
-		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, ELastDirectory::LEVEL, ContextHandle);
+		FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(GameplayEffectClass, EffectLevel, ContextHandle);
 		if(SpecHandle != nullptr)
 		{
 			ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());

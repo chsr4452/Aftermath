@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "NavigationSystemTypes.h"
+#include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/PlayerController/AftermathPlayerController.h"
 #include "Aftermath/PlayerState/AftermathPlayerState.h"
 #include "Camera/CameraComponent.h"
@@ -52,6 +53,7 @@ void AMainCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilitySystemComponent();
+	AddCharacterAbilities();
 }
 
 void AMainCharacter::OnRep_PlayerState()
@@ -62,6 +64,7 @@ void AMainCharacter::OnRep_PlayerState()
 
 void AMainCharacter::InitAbilitySystemComponent()
 {
+	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("InitAbilitySystemComponent"));
 	APlayerState * PlayerStateTemp = GetPlayerState();
 	check(PlayerStateTemp)
 	AAftermathPlayerState* AftermathPlayerState = Cast<AAftermathPlayerState>(PlayerStateTemp);
@@ -70,7 +73,7 @@ void AMainCharacter::InitAbilitySystemComponent()
 	AbilitySystemComponent = AftermathPlayerState->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(AftermathPlayerState, this);
 	AttributeSet = AftermathPlayerState->GetAttributeSet();
-
+	
 	if(AAftermathPlayerController* PC =  Cast<AAftermathPlayerController>(GetController()))
 	{
 		AAftermathHUD* HUD = PC->GetHUD<AAftermathHUD>();
@@ -79,9 +82,7 @@ void AMainCharacter::InitAbilitySystemComponent()
 		{
 			AftermathHUD->InitOverlay(PC, AftermathPlayerState, AbilitySystemComponent, AttributeSet);
 		}
-		
-        
 	}
-	
-
+	UAftermathAbilitySystemComponent* AftermathAbilitySystemComponent =  Cast<UAftermathAbilitySystemComponent>(AbilitySystemComponent);
+	AftermathAbilitySystemComponent->AbilityActorInfoSet();
 }

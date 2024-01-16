@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectTypes.h"
 #include "AftermathAttributeSet.generated.h"
 
 /**
@@ -16,12 +17,56 @@ GAMEPLAYATTRIBUTE_VALUE_GETTER(AttributeName) \
 GAMEPLAYATTRIBUTE_VALUE_SETTER(AttributeName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(AttributeName)
 
+// struct FGameplayEffectContextHandle;
+
+USTRUCT()
+struct FEffectProperties
+{
+	GENERATED_BODY()
+	FEffectProperties(){}
+	
+	UPROPERTY()
+    FGameplayEffectContextHandle EffectContextHandle;
+	
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> TargetASC;
+
+	UPROPERTY()
+	TObjectPtr<AActor> TargetActor;
+
+	UPROPERTY()
+	TObjectPtr<AController> TargetController;
+
+	UPROPERTY()
+	TObjectPtr<ACharacter> TargetCharacter;
+
+
+
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> SourceASC;
+
+	UPROPERTY()
+	TObjectPtr<AActor> SourceAvatarActor;
+
+	UPROPERTY()
+	TObjectPtr<AController> SourceController;
+
+	UPROPERTY()
+	TObjectPtr<ACharacter> SourceCharacter;
+
+
+};
+
+
+
 UCLASS()
 class AFTERMATH_API UAftermathAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 public:
 	UAftermathAttributeSet();
+
+	FEffectProperties* PropPtr;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", ReplicatedUsing = OnRep_Health);
 	FGameplayAttributeData Health;
@@ -49,4 +94,9 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+private:
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 };

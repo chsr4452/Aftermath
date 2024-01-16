@@ -63,6 +63,10 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Gameplay|Effect")
 	EEffectRemovalPolicy InfiniteRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Gameplay|Effect")
+	float EffectLevel = 1;
+	
 private:
 	// UPROPERTY(EditAnywhere, Category = "EffectActor")
 	// TObjectPtr<USphereComponent> ActorSphere;

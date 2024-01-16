@@ -2,8 +2,12 @@
 
 
 #include "AftermathAttributeSet.h"
-
+#include "GameplayEffectTypes.h"
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+#include "GameFramework/Character.h"
+#include "Interfaces/ITargetDevice.h"
+
 
 UAftermathAttributeSet::UAftermathAttributeSet()
 {
@@ -43,4 +47,62 @@ void UAftermathAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 	DOREPLIFETIME_CONDITION_NOTIFY(UAftermathAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAftermathAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 }
+
+void UAftermathAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if(Attribute.GetName() == "Health")
+	{
+		const float ClampHealth = FMath::Clamp(GetHealth(), 0.f, 100.f);
+		// UE_LOG(LogTemp, Warning, TEXT("Health is: %f"), ClampHealth);
+	}
+
+	if(Attribute.GetName() == "Mana")
+	{
+		const float ClampMana = FMath::Clamp(GetMana(), 0.f, 100.f);
+		// UE_LOG(LogTemp, Warning, TEXT("Mana is: %f"), ClampMana);
+	}
+}
+
+void UAftermathAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	FEffectProperties Props;
+	SetEffectProperties(Data, Props);
+	PropPtr = &Props;
+}
+
+void UAftermathAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+{
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+
+	if(IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get();
+		if(Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		{
+			if(const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
+			{
+				Props.SourceController = Pawn->GetController();
+			}
+		}
+		if(Props.SourceController)
+		{
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetCharacter());
+		}
+	}
+
+	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetASC = Data.Target.AbilityActorInfo->AbilitySystemComponent.Get();
+		Props.TargetCharacter = Props.TargetController->GetCharacter();
+	}
+}
+
+
 

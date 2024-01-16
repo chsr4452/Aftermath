@@ -18,3 +18,4 @@ void UAftermathWidgetController::SetWidgetControllerParams(const FWidgetControll
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+

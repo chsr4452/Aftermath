@@ -2,9 +2,11 @@
 
 
 #include "AftermathPlayerController.h"
-#include "EnhancedInputComponent.h"
+#include "../Input/AmathInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 
 AAftermathPlayerController::AAftermathPlayerController()
 {
@@ -32,8 +34,9 @@ void AAftermathPlayerController::BeginPlay()
 void AAftermathPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	EnhancedInputComponent =  Cast<UEnhancedInputComponent>(InputComponent);
-	EnhancedInputComponent->BindAction(ActionMove, ETriggerEvent::Triggered, this, &AAftermathPlayerController::Move);
+	AmathInputComponent=  Cast<UAmathInputComponent>(InputComponent);
+	AmathInputComponent->BindAction(ActionMove, ETriggerEvent::Triggered, this, &AAftermathPlayerController::Move);
+	AmathInputComponent->BindAbilityActions(InputConfig, this, &AAftermathPlayerController::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
 void AAftermathPlayerController::Move(const FInputActionValue& InputActionValue)
@@ -48,4 +51,31 @@ void AAftermathPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControlledPawn->AddMovementInput(NorthDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(EastDirection, InputAxisVector.X);
 	}
+}
+
+void AAftermathPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+}
+
+void AAftermathPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if(GetASC() == nullptr) return;
+	
+	GetASC()->AbilityInputTagReleased(InputTag);
+}
+
+void AAftermathPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	if(GetASC() == nullptr) return;
+	
+	GetASC()->AbilityInputTagHeld(InputTag);
+}
+
+UAftermathAbilitySystemComponent* AAftermathPlayerController::GetASC()
+{
+	if(AftermathAbilitySystemComponent == nullptr)
+	{
+		AftermathAbilitySystemComponent = Cast<UAftermathAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return AftermathAbilitySystemComponent;
 }

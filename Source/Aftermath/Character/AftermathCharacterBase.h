@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "AftermathCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UAttributeSet;
 class UAbilitySystemComponent;
 
@@ -27,5 +28,12 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
+
+protected:
+	void AddCharacterAbilities();
+private:
+
+	UPROPERTY(EditAnywhere, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
 };

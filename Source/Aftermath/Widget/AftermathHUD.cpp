@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "AftermathHUD.h"
+#include "Blueprint/UserWidget.h"       // for UUserWidget
+#include "UMG.h"						// for UWidgetBlueprintLibrary
+
 
 #include "AftermathUserWidget.h"
 #include "OverlayWidgetController.h"
@@ -13,7 +15,6 @@ UOverlayWidgetController* AAftermathHUD::GetOverlayWidgetController(const FWidge
 	{
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
-		OverlayWidgetController->BindCallBacksToDependencies();
 		return OverlayWidgetController;
 	}
 
@@ -23,6 +24,7 @@ UOverlayWidgetController* AAftermathHUD::GetOverlayWidgetController(const FWidge
 void AAftermathHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC,
 	UAttributeSet* AS)
 {
+	// GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, TEXT("InitOverlay Called"));
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass not found, pleast fill out BP_HUD"));
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass not found, pleast fill out BP_HUD"));
 	
@@ -33,7 +35,9 @@ void AAftermathHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilit
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 	
 	OverlayWidget->SetWidgetController(WidgetController);
+	
+	// OverlayWidget->SetProgressBarPercentFunc();
 	WidgetController->BroadcastInitialValues();
-	// WidgetController->BindCallBacksToDependencies();
-	OverlayWidget->AddToViewport();
+	WidgetController->BindCallBacksToDependencies();
+	Widget->AddToViewport();
 }

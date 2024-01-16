@@ -9,10 +9,13 @@
 /**
  */
 
+struct FGameplayTag;
+class UInputConfigDataAsset;
 class UInputMappingContext;
 class UInputAction;
-class UEnhancedInputComponent;
+class UAmathInputComponent;
 struct FInputActionValue;
+class UAftermathAbilitySystemComponent;
 
 UCLASS
 ()
@@ -22,7 +25,7 @@ class AFTERMATH_API AAftermathPlayerController : public APlayerController
 public:
 	AAftermathPlayerController();
 	virtual void BeginPlay() override;
-	TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent;
+	TObjectPtr<UAmathInputComponent> AmathInputComponent;
 
 private:
 	
@@ -36,5 +39,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> ActionMove;
 
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UInputConfigDataAsset> InputConfig;
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+	UPROPERTY()
+	TObjectPtr<UAftermathAbilitySystemComponent> AftermathAbilitySystemComponent;
+
+	UAftermathAbilitySystemComponent* GetASC();
 };
