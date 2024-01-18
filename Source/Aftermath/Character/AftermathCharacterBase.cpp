@@ -24,5 +24,20 @@ void AAftermathCharacterBase::AddCharacterAbilities()
 	AmathASC->AddCharacterAbilities(StartupAbilities);
 }
 
+void AAftermathCharacterBase::InitVitalAttributes()
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultVitalAttributes);
+	const FGameplayEffectContextHandle EffectContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectSpecHandle const EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultVitalAttributes, 1.f, EffectContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+FVector AAftermathCharacterBase::GetCombatSocketLocation()
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 
 

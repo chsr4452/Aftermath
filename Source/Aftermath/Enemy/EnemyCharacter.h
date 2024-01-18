@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Aftermath/Character/AftermathCharacterBase.h"
-
+#include "../Widget/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
 
+class UAftermathAttributeSet;
+class FOnHealthChangeSignature;
 /**
  * 
  */
+class UWidgetComponent;
 UCLASS()
 class AFTERMATH_API AEnemyCharacter : public AAftermathCharacterBase
 {
@@ -18,6 +21,21 @@ class AFTERMATH_API AEnemyCharacter : public AAftermathCharacterBase
 public:
 	AEnemyCharacter();
 	virtual void BeginPlay() override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChangeSignature OnHealthChange;
+	//
+	// UPROPERTY(EditAnywhere, Category = Animation)
+	// UAnimMontage* HitReactMontage;
 	
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY()
+	UAftermathAttributeSet* AmathAttributeSet;
+
+	
+	void HealthChange(const FOnAttributeChangeData& Data);
 	
 };

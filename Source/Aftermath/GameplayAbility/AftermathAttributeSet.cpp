@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/ITargetDevice.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 
 UAftermathAttributeSet::UAftermathAttributeSet()
@@ -99,8 +100,8 @@ void UAftermathAttributeSet::SetEffectProperties(const FGameplayEffectModCallbac
 	{
 		Props.TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
 		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		Props.TargetASC = Data.Target.AbilityActorInfo->AbilitySystemComponent.Get();
-		Props.TargetCharacter = Props.TargetController->GetCharacter();
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetActor);
 	}
 }
 

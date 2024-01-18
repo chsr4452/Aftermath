@@ -6,6 +6,8 @@
 #include "AmathGameplayAbilityBase.h"
 #include "AmathProjectileAbility.generated.h"
 
+class AAmathProjectile;
+class UGameplayEffect;
 /**
  * 
  */
@@ -15,5 +17,12 @@ class AFTERMATH_API UAmathProjectileAbility : public UAmathGameplayAbilityBase
 	GENERATED_BODY()
 protected:
 
+public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ProjectileClass")
+	TSubclassOf<AAmathProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

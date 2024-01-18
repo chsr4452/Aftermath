@@ -5,14 +5,16 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "../Misc/CombatInterface.h"
 #include "AftermathCharacterBase.generated.h"
 
+class UGameplayEffect;
 class UGameplayAbility;
 class UAttributeSet;
 class UAbilitySystemComponent;
 
 UCLASS()
-class AFTERMATH_API AAftermathCharacterBase : public ACharacter, public IAbilitySystemInterface
+class AFTERMATH_API AAftermathCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -31,6 +33,22 @@ public:
 
 protected:
 	void AddCharacterAbilities();
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> Weapon;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName WeaponTipSocketName;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FVector WeaponTipSocketLocation = FVector(0,0,0);
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+
+	void InitVitalAttributes();
+	
+	virtual FVector GetCombatSocketLocation() override;
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Abilities")

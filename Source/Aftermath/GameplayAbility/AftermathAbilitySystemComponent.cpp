@@ -4,7 +4,7 @@
 #include "AftermathAbilitySystemComponent.h"
 
 #include "AmathGameplayAbilityBase.h"
-#include "Aftermath/AmathGameplayTag.h"
+#include "Aftermath/Misc/AmathGameplayTag.h"
 
 void UAftermathAbilitySystemComponent::AbilityActorInfoSet()
 {

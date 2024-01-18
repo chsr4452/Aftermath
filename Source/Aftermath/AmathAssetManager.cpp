@@ -2,7 +2,7 @@
 
 
 #include "AmathAssetManager.h"
-#include "AmathGameplayTag.h"
+#include "Misc/AmathGameplayTag.h"
 
 UAmathAssetManager& UAmathAssetManager::Get()
 {
