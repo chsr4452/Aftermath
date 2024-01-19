@@ -21,6 +21,11 @@ public:
  FGameplayTag Attributes_Vital_MaxMana;
  FGameplayTag InputTag_LMB;
  FGameplayTag InputTag_RMB;
+ //
+ // FGameplayTag Message_HealthPotion;
+ // FGameplayTag Message_HealthCrystal;
+ // FGameplayTag Message_ManaPotion;
+ // FGameplayTag Message_ManaCrystal;
  
 
  

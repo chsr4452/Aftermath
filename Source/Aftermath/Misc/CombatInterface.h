@@ -24,4 +24,5 @@ class AFTERMATH_API ICombatInterface
 public:
 	virtual int32 GetLevel();
 	virtual FVector GetCombatSocketLocation();
+	//virtual void Die() = 0;
 };
