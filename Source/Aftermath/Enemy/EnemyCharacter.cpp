@@ -43,6 +43,13 @@ void AEnemyCharacter::BeginPlay()
 	OnHealthChange.Broadcast(AmathAttributeSet->GetHealth());
 }
 
+void AEnemyCharacter::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+	
+}
+
 void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 {
 	// GetCharacterMovement()->StopMovementImmediately();

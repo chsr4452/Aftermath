@@ -24,6 +24,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChangeSignature OnHealthChange;
+
+	virtual void Die() override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float LifeSpan = 5.f;
+	
 	//
 	// UPROPERTY(EditAnywhere, Category = Animation)
 	// UAnimMontage* HitReactMontage;
