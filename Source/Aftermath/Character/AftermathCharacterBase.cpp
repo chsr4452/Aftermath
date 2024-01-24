@@ -5,6 +5,7 @@
 
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AAftermathCharacterBase::AAftermathCharacterBase()
@@ -18,7 +19,8 @@ AAftermathCharacterBase::AAftermathCharacterBase()
 }
 
 UAbilitySystemComponent* AAftermathCharacterBase::GetAbilitySystemComponent() const
-{return AbilitySystemComponent;
+{
+	return AbilitySystemComponent;
 }
 
 void AAftermathCharacterBase::MulticastHandleDeath_Implementation()
@@ -27,17 +29,25 @@ void AAftermathCharacterBase::MulticastHandleDeath_Implementation()
 	Weapon->SetEnableGravity(true);
 	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 
-	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetEnableGravity(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->SetAnimationMode(EAnimationMode::Type::AnimationCustomMode);
+	// GetMesh()->SetAllBodiesSimulatePhysics(true);
+	// GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->SetComponentTickEnabled(false);
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AAftermathCharacterBase::Die()
 {
-	
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	GetMesh()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
 }
 
 void AAftermathCharacterBase::AddCharacterAbilities()

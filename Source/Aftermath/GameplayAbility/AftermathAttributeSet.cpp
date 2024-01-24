@@ -104,6 +104,3 @@ void UAftermathAttributeSet::SetEffectProperties(const FGameplayEffectModCallbac
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetActor);
 	}
 }
-
-
-

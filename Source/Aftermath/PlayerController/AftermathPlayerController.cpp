@@ -34,7 +34,7 @@ void AAftermathPlayerController::BeginPlay()
 void AAftermathPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	AmathInputComponent=  Cast<UAmathInputComponent>(InputComponent);
+	AmathInputComponent=  CastChecked<UAmathInputComponent>(InputComponent);
 	AmathInputComponent->BindAction(ActionMove, ETriggerEvent::Triggered, this, &AAftermathPlayerController::Move);
 	AmathInputComponent->BindAbilityActions(InputConfig, this, &AAftermathPlayerController::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
@@ -57,18 +57,18 @@ void AAftermathPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 }
 
-void AAftermathPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
-{
-	if(GetASC() == nullptr) return;
-	
-	GetASC()->AbilityInputTagReleased(InputTag);
-}
-
 void AAftermathPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	if(GetASC() == nullptr) return;
 	
 	GetASC()->AbilityInputTagHeld(InputTag);
+}
+
+void AAftermathPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if(GetASC() == nullptr) return;
+	
+	GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 UAftermathAbilitySystemComponent* AAftermathPlayerController::GetASC()

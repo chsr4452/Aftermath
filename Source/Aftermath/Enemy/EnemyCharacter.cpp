@@ -55,4 +55,8 @@ void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 	// GetCharacterMovement()->StopMovementImmediately();
 	// PlayAnimMontage(HitReactMontage);
 	OnHealthChange.Broadcast(Data.NewValue);
+	if(Data.NewValue <= 0)
+	{
+		Die();
+	}
 }

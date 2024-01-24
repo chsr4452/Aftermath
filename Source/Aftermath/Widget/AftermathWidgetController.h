@@ -26,8 +26,6 @@ struct FWidgetControllerParams
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<UAttributeSet> AttributeSet = nullptr;
-	
-
 };
 
 
