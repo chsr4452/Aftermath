@@ -4,8 +4,11 @@
 #include "EnemyCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "Aftermath/AIController/AIController_Enemy.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -41,6 +44,16 @@ void AEnemyCharacter::BeginPlay()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AmathAttributeSet->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChange);
 
 	OnHealthChange.Broadcast(AmathAttributeSet->GetHealth());
+}
+
+void AEnemyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if(!HasAuthority()) return;
+	AIController_Enemy = Cast<AAIController_Enemy>(NewController);
+
+	AIController_Enemy->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	AIController_Enemy->RunBehaviorTree(BehaviorTree);
 }
 
 void AEnemyCharacter::Die()

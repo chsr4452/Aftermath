@@ -9,6 +9,8 @@
 
 class UAftermathAttributeSet;
 class FOnHealthChangeSignature;
+class AAIController_Enemy;
+class UBehaviorTree;
 /**
  * 
  */
@@ -21,6 +23,8 @@ class AFTERMATH_API AEnemyCharacter : public AAftermathCharacterBase
 public:
 	AEnemyCharacter();
 	virtual void BeginPlay() override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChangeSignature OnHealthChange;
@@ -43,5 +47,10 @@ protected:
 
 	
 	void HealthChange(const FOnAttributeChangeData& Data);
-	
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAIController_Enemy> AIController_Enemy;
 };
