@@ -4,13 +4,14 @@
 #include "EnemyCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "Aftermath/AIController/AIController_Enemy.h"
+#include "Aftermath/AI/AIController_Enemy.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -58,9 +59,7 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 
 void AEnemyCharacter::Die()
 {
-	SetLifeSpan(LifeSpan);
 	Super::Die();
-	
 }
 
 void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
@@ -70,6 +69,7 @@ void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 	OnHealthChange.Broadcast(Data.NewValue);
 	if(Data.NewValue <= 0)
 	{
+		SetLifeSpan(LifeSpan);
 		Die();
 	}
 }

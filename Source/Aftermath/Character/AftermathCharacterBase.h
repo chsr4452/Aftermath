@@ -21,7 +21,7 @@ class AFTERMATH_API AAftermathCharacterBase : public ACharacter, public IAbility
 public:
 	// Sets default values for this character's properties
 	AAftermathCharacterBase();
-	
+	virtual void BeginPlay() override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual UAttributeSet* GetAttributeSet()const {return AttributeSet;}
 	
@@ -55,6 +55,9 @@ protected:
 	void InitVitalAttributes();
 	
 	virtual FVector GetCombatSocketLocation() override;
+
+	UPROPERTY(EditAnywhere)
+	FName Tag;
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Abilities")

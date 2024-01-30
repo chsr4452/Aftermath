@@ -49,6 +49,7 @@ void AMainCharacter::Tick(float DeltaSeconds)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void AMainCharacter::PossessedBy(AController* NewController)

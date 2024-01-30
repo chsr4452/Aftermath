@@ -13,6 +13,7 @@
 
 // Sets default values
 AAmathProjectile::AAmathProjectile()
+
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -30,7 +31,6 @@ AAmathProjectile::AAmathProjectile()
 	ProjectileMovement->InitialSpeed = 550.f;
 	ProjectileMovement->MaxSpeed = 550.f;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
-	
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +43,6 @@ void AAmathProjectile::BeginPlay()
 	LoopSoundComponent->SetupAttachment(GetRootComponent());
 	LoopSoundComponent->SetVolumeMultiplier(0.1);
 	LoopSoundComponent->bStopWhenOwnerDestroyed = true;
-	
 }
 
 void AAmathProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -55,6 +54,7 @@ void AAmathProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 	if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 	{
 		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		TargetASC->ApplyGameplayEffectSpecToSelf(*EffectBurnSpecHandle.Data.Get());
 	}
 	Destroy();
 }

@@ -26,6 +26,7 @@ void UAmathProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(GetAvatarActorFromActorInfo()->GetActorRotation().Quaternion());
 		
         	AAmathProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAmathProjectile>(
         		ProjectileClass,
@@ -36,13 +37,15 @@ void UAmathProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
         		ESpawnActorScaleMethod::MultiplyWithRoot
         		);
 			
-			Projectile->SetActorRotation(GetAvatarActorFromActorInfo()->GetActorRotation());
+			// Projectile->SetActorRotation(GetAvatarActorFromActorInfo()->GetActorRotation());
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 		if(HasAuth)
 		{
 			const FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 			const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, 1, EffectContextHandle);
+			const FGameplayEffectSpecHandle SpecHandleBurn = SourceASC->MakeOutgoingSpec(EffectBurnClass, 1, EffectContextHandle);
 			Projectile->DamageEffectSpecHandle = SpecHandle;
+			Projectile->EffectBurnSpecHandle = SpecHandleBurn;
 			Projectile->FinishSpawning(SpawnTransform);
 		}
 	}

@@ -23,6 +23,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Blueprint Class")
 	TSubclassOf<AAmathProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ability Effect Class")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay Effect Class")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Gameplay Effect Class")
+	TSubclassOf<UGameplayEffect> EffectBurnClass;
+
+	
 };

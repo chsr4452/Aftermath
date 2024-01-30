@@ -18,6 +18,12 @@ AAftermathCharacterBase::AAftermathCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void AAftermathCharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+	Tags.AddUnique(Tag);
+}
+
 UAbilitySystemComponent* AAftermathCharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -38,7 +44,7 @@ void AAftermathCharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCharacterMovement()->StopMovementImmediately();
 	GetCharacterMovement()->DisableMovement();
-	GetCharacterMovement()->SetComponentTickEnabled(false);
+	// GetCharacterMovement()->SetComponentTickEnabled(false);
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
@@ -54,7 +60,6 @@ void AAftermathCharacterBase::AddCharacterAbilities()
 {
 	UAftermathAbilitySystemComponent* AmathASC = CastChecked<UAftermathAbilitySystemComponent>(AbilitySystemComponent);
 	if(!HasAuthority()) return;
-
 	AmathASC->AddCharacterAbilities(StartupAbilities);
 }
 

@@ -41,7 +41,7 @@ void UAftermathAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& I
 	{
 		if(AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
-			AbilitySpecInputPressed(AbilitySpec);
+		AbilitySpecInputPressed(AbilitySpec);
 			if(!AbilitySpec.IsActive())
 			{
 				TryActivateAbility(AbilitySpec.Handle);

@@ -37,10 +37,7 @@ public:
 				{
 					BindAction(Action.InputAction, ETriggerEvent::Triggered, Object, HeldFunc, Action.InputTag);
 				}
-
-				
 			}
 		}
 	}
-	
 };
