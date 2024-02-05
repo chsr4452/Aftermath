@@ -18,8 +18,6 @@ AEnemyCharacter::AEnemyCharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UAftermathAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-
-	
 	
 	AttributeSet = CreateDefaultSubobject<UAftermathAttributeSet>("AttributeSet");
 	AmathAttributeSet = CastChecked<UAftermathAttributeSet>(AttributeSet);
@@ -31,6 +29,12 @@ AEnemyCharacter::AEnemyCharacter()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 360.f, 0.f);
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -52,7 +56,6 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	if(!HasAuthority()) return;
 	AIController_Enemy = Cast<AAIController_Enemy>(NewController);
-
 	AIController_Enemy->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AIController_Enemy->RunBehaviorTree(BehaviorTree);
 }

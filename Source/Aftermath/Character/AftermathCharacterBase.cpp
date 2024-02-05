@@ -22,6 +22,7 @@ void AAftermathCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	Tags.AddUnique(Tag);
+	Tags.AddUnique(AttackType);
 }
 
 UAbilitySystemComponent* AAftermathCharacterBase::GetAbilitySystemComponent() const

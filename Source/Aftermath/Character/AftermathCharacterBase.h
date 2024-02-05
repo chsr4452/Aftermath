@@ -58,6 +58,10 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FName Tag;
+
+	UPROPERTY(EditAnywhere)
+	FName AttackType;
+	
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Abilities")

@@ -27,8 +27,7 @@ void UAmathProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
 		SpawnTransform.SetRotation(GetAvatarActorFromActorInfo()->GetActorRotation().Quaternion());
-		
-        	AAmathProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAmathProjectile>(
+       	AAmathProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAmathProjectile>(
         		ProjectileClass,
         		SpawnTransform,
         		GetOwningActorFromActorInfo(),
