@@ -33,5 +33,4 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArm;
 
 	void InitAbilitySystemComponent();
-	
 };

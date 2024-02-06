@@ -37,6 +37,7 @@ AMainCharacter::AMainCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	Tags.Add(FName("Player"));
 	
 }
 
@@ -49,7 +50,6 @@ void AMainCharacter::Tick(float DeltaSeconds)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AMainCharacter::PossessedBy(AController* NewController)
