@@ -7,6 +7,7 @@
 #include "Aftermath/AI/AIController_Enemy.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
+#include "Aftermath/GameplayAbility/AmathProjectileAbility.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
@@ -35,6 +36,9 @@ AEnemyCharacter::AEnemyCharacter()
 	bUseControllerRotationRoll = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 360.f, 0.f);
+
+	Tags.Add(FName("Enemy"));
+	// AttackAbility = UAmathEnemyProjectileAbility::StaticClass();
 }
 
 void AEnemyCharacter::BeginPlay()
@@ -74,5 +78,17 @@ void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 	{
 		SetLifeSpan(LifeSpan);
 		Die();
+	}
+}
+
+void AEnemyCharacter::EnemyAttack()
+{
+	if(AbilitySystemComponent)
+	{	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Enemy Attack Activated.");
+		FGameplayAbilitySpec const Spec(AttackAbility, 1, 0);
+		auto ActivatableAbilitiesArray1 =  this->AbilitySystemComponent->GetActivatableAbilities();
+		this->AbilitySystemComponent->GiveAbility(Spec);
+		auto ActivatableAbilitiesArray2 =  this->AbilitySystemComponent->GetActivatableAbilities();
+		AbilitySystemComponent->TryActivateAbility(Spec.Handle);
 	}
 }

@@ -45,15 +45,18 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input Parameter")
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input Parameter")
 	TObjectPtr<USoundBase> ImpactSound;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input Parameter")
 	TObjectPtr<USoundBase> LoopSound;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Input Parameter")
 	TObjectPtr<UAudioComponent> LoopSoundComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Input Parameter")
+	FName ActorAlly;
 };

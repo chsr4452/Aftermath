@@ -7,6 +7,8 @@
 #include "../Widget/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
 
+class UAmathProjectileAbility;
+
 class UAftermathAttributeSet;
 class FOnHealthChangeSignature;
 class AAIController_Enemy;
@@ -33,6 +35,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Ability")
+	TSubclassOf<UAmathProjectileAbility> AttackAbility;
 	
 	//
 	// UPROPERTY(EditAnywhere, Category = Animation)
@@ -53,4 +58,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<AAIController_Enemy> AIController_Enemy;
+
+	UFUNCTION(BlueprintCallable)
+	void EnemyAttack();
 };

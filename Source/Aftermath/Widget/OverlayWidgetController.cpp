@@ -3,6 +3,7 @@
 
 #include "OverlayWidgetController.h"
 
+#include "Aftermath/Character/MainCharacter.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/GameplayAbility/AftermathAttributeSet.h"
 
@@ -59,7 +60,7 @@ float UOverlayWidgetController::GetHealthFloat(float NewValue) const
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChange.Broadcast(Data.NewValue);
-	GetHealthFloat(Data.NewValue);
+	Cast<AMainCharacter>(PlayerController->GetCharacter())->Die();
 }
 
 void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const

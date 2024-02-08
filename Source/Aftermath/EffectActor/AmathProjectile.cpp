@@ -41,13 +41,17 @@ void AAmathProjectile::BeginPlay()
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
 	LoopSoundComponent= UGameplayStatics::SpawnSoundAttached(LoopSound, Sphere);
 	LoopSoundComponent->SetupAttachment(GetRootComponent());
-	LoopSoundComponent->SetVolumeMultiplier(0.1);
+	LoopSoundComponent->SetVolumeMultiplier(0.05);
 	LoopSoundComponent->bStopWhenOwnerDestroyed = true;
+
 }
 
 void AAmathProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	
+	if(OtherActor->Tags.Contains(ActorAlly)) return;
+	check(OtherActor);
 	LoopSoundComponent->Stop();
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
@@ -58,4 +62,3 @@ void AAmathProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 	}
 	Destroy();
 }
-
