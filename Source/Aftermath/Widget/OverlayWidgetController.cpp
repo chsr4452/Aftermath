@@ -60,7 +60,7 @@ float UOverlayWidgetController::GetHealthFloat(float NewValue) const
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChange.Broadcast(Data.NewValue);
-	Cast<AMainCharacter>(PlayerController->GetCharacter())->Die();
+	if(Data.NewValue <= 0) Cast<AMainCharacter>(PlayerController->GetCharacter())->Die();
 }
 
 void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const

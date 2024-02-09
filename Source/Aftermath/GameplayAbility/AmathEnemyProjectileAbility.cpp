@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Aftermath/Character/AftermathCharacterBase.h"
 #include "Aftermath/EffectActor/AmathProjectile.h"
 
 void UAmathEnemyProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

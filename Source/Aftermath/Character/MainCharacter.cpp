@@ -94,4 +94,5 @@ void AMainCharacter::InitAbilitySystemComponent()
 	}
 	UAftermathAbilitySystemComponent* AftermathAbilitySystemComponent =  Cast<UAftermathAbilitySystemComponent>(AbilitySystemComponent);
 	AftermathAbilitySystemComponent->AbilityActorInfoSet();
+	
 }

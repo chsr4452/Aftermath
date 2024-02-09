@@ -48,13 +48,17 @@ void AAftermathCharacterBase::MulticastHandleDeath_Implementation()
 	// GetCharacterMovement()->SetComponentTickEnabled(false);
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	
 }
 
 void AAftermathCharacterBase::Die()
 {
+	IsDead = true;
 	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	GetMesh()->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	MulticastHandleDeath();
+	
 }
 
 void AAftermathCharacterBase::AddCharacterAbilities()

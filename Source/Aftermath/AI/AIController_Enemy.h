@@ -20,8 +20,6 @@ public:
 	AAIController_Enemy();
 
 protected:
-
-	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComponent;
 };

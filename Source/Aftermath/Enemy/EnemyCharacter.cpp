@@ -84,7 +84,9 @@ void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 void AEnemyCharacter::EnemyAttack()
 {
 	if(AbilitySystemComponent)
-	{	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Enemy Attack Activated.");
+	{
+		if(this->IsDead) return;
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Enemy Attack Activated.");
 		FGameplayAbilitySpec const Spec(AttackAbility, 1, 0);
 		auto ActivatableAbilitiesArray1 =  this->AbilitySystemComponent->GetActivatableAbilities();
 		this->AbilitySystemComponent->GiveAbility(Spec);

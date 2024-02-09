@@ -32,10 +32,9 @@ public:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	virtual void Die() override;
-
+	bool IsDead = false;
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
-	
 
 protected:
 	void AddCharacterAbilities();
