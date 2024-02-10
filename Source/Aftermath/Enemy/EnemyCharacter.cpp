@@ -12,6 +12,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 AEnemyCharacter::AEnemyCharacter()
@@ -62,6 +63,9 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	AIController_Enemy = Cast<AAIController_Enemy>(NewController);
 	AIController_Enemy->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AIController_Enemy->RunBehaviorTree(BehaviorTree);
+
+	EnemyBlackboard = AIController_Enemy->GetBlackboardComponent();
+	
 }
 
 void AEnemyCharacter::Die()
@@ -86,11 +90,24 @@ void AEnemyCharacter::EnemyAttack()
 	if(AbilitySystemComponent)
 	{
 		if(this->IsDead) return;
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Enemy Attack Activated.");
+		TargetObject = EnemyBlackboard->GetValueAsObject(FName("TargetActorToFollow"));
+		if(TargetObject)
+		{
+				AActor* TargetActor = Cast<AActor>(TargetObject);
+			
+            	// Calculate the direction to the target actor.
+            	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(this->GetActorLocation(), TargetActor->GetActorLocation());
+			
+            	// Set the actor rotation to the calculated rotation
+            	this->SetActorRotation(LookAtRotation);
+		}
+	
+		
+		// GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Red, "Enemy Attack Activated.");
 		FGameplayAbilitySpec const Spec(AttackAbility, 1, 0);
-		auto ActivatableAbilitiesArray1 =  this->AbilitySystemComponent->GetActivatableAbilities();
+		// auto ActivatableAbilitiesArray1 =  this->AbilitySystemComponent->GetActivatableAbilities();
 		this->AbilitySystemComponent->GiveAbility(Spec);
-		auto ActivatableAbilitiesArray2 =  this->AbilitySystemComponent->GetActivatableAbilities();
+		// auto ActivatableAbilitiesArray2 =  this->AbilitySystemComponent->GetActivatableAbilities();
 		AbilitySystemComponent->TryActivateAbility(Spec.Handle);
 	}
 }

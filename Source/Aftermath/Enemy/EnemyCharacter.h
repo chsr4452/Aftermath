@@ -7,6 +7,7 @@
 #include "../Widget/OverlayWidgetController.h"
 #include "EnemyCharacter.generated.h"
 
+class UBlackboardComponent;
 class UAmathProjectileAbility;
 
 class UAftermathAttributeSet;
@@ -61,4 +62,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void EnemyAttack();
+
+	TObjectPtr<UBlackboardComponent> EnemyBlackboard;
+	TObjectPtr<UObject> TargetObject;
 };

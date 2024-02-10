@@ -14,7 +14,7 @@ void UAmathProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 	const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	UKismetSystemLibrary::PrintString(this, FString("Activate Ability (C++)"), true, true, FColor::Red, 5);
+	// UKismetSystemLibrary::PrintString(this, FString("Activate Ability (C++)"), true, true, FColor::Red, 5);
 	
 	const bool HasAuth = HasAuthority(&ActivationInfo);
 	if(!HasAuth) return;

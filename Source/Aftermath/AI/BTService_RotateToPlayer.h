@@ -13,4 +13,13 @@ UCLASS()
 class AFTERMATH_API UBTService_RotateToPlayer : public UBTService_BlueprintBase
 {
 	GENERATED_BODY()
+protected:
+		UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    	FBlackboardKeySelector MyBlackboardKeySelector;
+
+		UObject* TargetObject;
+private:
+	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	
+
 };
