@@ -7,6 +7,8 @@
 #include "Aftermath/Character/AftermathCharacterBase.h"
 #include "Aftermath/Character/MainCharacter.h"
 #include "Aftermath/Misc/AmathGameplayTag.h"
+#include "Aftermath/Widget/QuestionWidget.h"
+#include "Components/EditableTextBox.h"
 
 void UAftermathAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -46,7 +48,14 @@ void UAftermathAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& I
 		AbilitySpecInputPressed(AbilitySpec);
 			if(!AbilitySpec.IsActive())
 			{	AActor* Avatar = this->GetAvatarActor();
+
+				//Update Question Widget
 				AMainCharacter* MainCharacter= Cast<AMainCharacter>(Avatar);
+				FString NewEquation = MainCharacter->GenerateEquation();
+				MainCharacter->Answer;
+				MainCharacter->QuestionWidget->LeftBox->SetText(FText::AsNumber(MainCharacter->Answer));
+				MainCharacter->QuestionWidget->MiddleBox->SetText(FText::FromString(NewEquation));
+				MainCharacter->QuestionWidget->RightBox->SetText(FText::AsNumber(MainCharacter->Answer));
 				
 				if(MainCharacter->IsDead) return;
 				TryActivateAbility(AbilitySpec.Handle);

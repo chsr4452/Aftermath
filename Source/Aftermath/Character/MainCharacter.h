@@ -32,9 +32,11 @@ public:
 	UPROPERTY()
 	TObjectPtr<UAftermathUserWidget> WidgetInComponent;
 	TObjectPtr<UQuestionWidget> QuestionWidget;
-
-
 	
+	UFUNCTION()
+	virtual FString GenerateEquation();
+
+	int Answer{0};
 protected:
 	UPROPERTY()
 	TObjectPtr<UCameraComponent> Camera;
@@ -47,9 +49,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> QuestionBar;
 
-	virtual FString GenerateEquation();
 
-	int Answer{0};
+
+	
 	
 	
 };
