@@ -6,6 +6,10 @@
 #include "AftermathCharacterBase.h"
 #include "MainCharacter.generated.h"
 
+class UQuestionWidget;
+class UEditableTextBox;
+class UAftermathUserWidget;
+class UWidgetComponent;
 class UCameraComponent;
 class USpringArmComponent;
 /**
@@ -25,6 +29,12 @@ public:
 
 	virtual int32 GetLevel() override;
 
+	UPROPERTY()
+	TObjectPtr<UAftermathUserWidget> WidgetInComponent;
+	TObjectPtr<UQuestionWidget> QuestionWidget;
+
+
+	
 protected:
 	UPROPERTY()
 	TObjectPtr<UCameraComponent> Camera;
@@ -33,5 +43,14 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArm;
 
 	void InitAbilitySystemComponent();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> QuestionBar;
+
+	virtual FString GenerateEquation();
+
+	int Answer{0};
+	
 	
 };
+

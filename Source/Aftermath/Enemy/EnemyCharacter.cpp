@@ -78,10 +78,16 @@ void AEnemyCharacter::HealthChange(const FOnAttributeChangeData& Data)
 	// GetCharacterMovement()->StopMovementImmediately();
 	// PlayAnimMontage(HitReactMontage);
 	OnHealthChange.Broadcast(Data.NewValue);
-	if(Data.NewValue <= 0)
+	if(Data.NewValue <= 0 and !Tags.Contains("IsDead"))
 	{
 		SetLifeSpan(LifeSpan);
 		Die();
+		
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this; // The actor who owns the spawned BP. (optional)
+		SpawnParams.Instigator = GetInstigator(); // (optional)
+		AEnemyCharacter* SpawnedActor = GetWorld()->SpawnActor<AEnemyCharacter>(this->GetClass(), this->GetActorLocation(), FRotator::ZeroRotator, SpawnParams);
+		SpawnedActor->SpawnDefaultController();
 	}
 }
 

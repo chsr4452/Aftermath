@@ -50,7 +50,6 @@ protected:
 
 	UPROPERTY()
 	UAftermathAttributeSet* AmathAttributeSet;
-
 	
 	void HealthChange(const FOnAttributeChangeData& Data);
 

@@ -4,7 +4,6 @@
 #include "MainCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "NavigationSystemTypes.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/PlayerController/AftermathPlayerController.h"
 #include "Aftermath/PlayerState/AftermathPlayerState.h"
@@ -12,6 +11,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Aftermath/Widget/AftermathHUD.h"
+#include "Aftermath/Widget/QuestionWidget.h"
+#include "Components/EditableTextBox.h"
+#include "Components/WidgetComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -38,7 +40,11 @@ AMainCharacter::AMainCharacter()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	Tags.Add(FName("Player"));
-	
+
+	QuestionBar = CreateDefaultSubobject<UWidgetComponent>("QuestionBar");
+	QuestionBar->SetupAttachment(GetRootComponent());
+
+
 }
 
 void AMainCharacter::Tick(float DeltaSeconds)
@@ -50,6 +56,11 @@ void AMainCharacter::Tick(float DeltaSeconds)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	FString const Equation = GenerateEquation();
+	QuestionWidget= Cast<UQuestionWidget>(QuestionBar->GetUserWidgetObject());
+	QuestionWidget->LeftBox->SetText(FText::FromString("Left From C++"));
+	QuestionWidget->MiddleBox->SetText(FText::FromString(Equation));
+	QuestionWidget->RightBox->SetText(FText::FromString("Right From C++"));
 }
 
 void AMainCharacter::PossessedBy(AController* NewController)
@@ -95,4 +106,33 @@ void AMainCharacter::InitAbilitySystemComponent()
 	UAftermathAbilitySystemComponent* AftermathAbilitySystemComponent =  Cast<UAftermathAbilitySystemComponent>(AbilitySystemComponent);
 	AftermathAbilitySystemComponent->AbilityActorInfoSet();
 	
+}
+
+FString AMainCharacter::GenerateEquation()
+{
+	int32 a = FMath::RandRange(0, 10);
+	int32 b = FMath::RandRange(1, 10); // Prevent divison by zero error
+    
+	TCHAR operators[] = { TEXT('+'), TEXT('-'), TEXT('*'), TEXT('/') };
+	TCHAR randomOperator = operators[FMath::RandRange(0, 3)];
+    
+	switch(randomOperator) {
+	case TEXT('+'):
+		Answer = a + b;
+		break;
+	case TEXT('-'):
+		Answer = a - b;
+		break;
+	case TEXT('*'):
+		Answer = a * b;
+		break;
+	case TEXT('/'):
+		Answer = a / b;
+		break;
+	default:
+		Answer = 0;
+		break;
+	}
+    
+	return FString::Printf(TEXT("%d %c %d"), a, randomOperator, b);
 }

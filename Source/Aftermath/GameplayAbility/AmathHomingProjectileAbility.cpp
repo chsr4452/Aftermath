@@ -50,7 +50,7 @@ void UAmathHomingProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHa
 			
 			Projectile->FinishSpawning(SpawnTransform);
 
-			Projectile->ProjectileMovement->bIsHomingProjectile = true;
+			Projectile->ProjectileMovement->bIsHomingProjectile = false;
 			Projectile->ProjectileMovement->HomingAccelerationMagnitude = 2000;
 
 			TArray<AActor*> FoundActors;
@@ -64,7 +64,7 @@ void UAmathHomingProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHa
 			for(AActor* ActorWithTag:FoundActors)
 			{
 				// GEngine->AddOnScreenDebugMessage(3, .5f, FColor::Green, ActorWithTag->GetName());
-				if(IsValid(ProjectileOwner) && IsValid(ActorWithTag))
+				if(IsValid(ProjectileOwner) && IsValid(ActorWithTag) && !ActorWithTag->ActorHasTag("IsDead"))
 				{
 					if(NearestDistance >  ProjectileOwner->GetDistanceTo(ActorWithTag))
 					{
@@ -73,9 +73,10 @@ void UAmathHomingProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHa
 					}
 				}
 			}
-			if (NearestActor)
+			if (NearestActor && NearestDistance <=2000)
 			{
 				Projectile->ProjectileMovement->HomingTargetComponent = NearestActor->GetRootComponent();
+				Projectile->ProjectileMovement->bIsHomingProjectile = true;
 			}
 			
 
@@ -83,3 +84,5 @@ void UAmathHomingProjectileAbility::ActivateAbility(const FGameplayAbilitySpecHa
 		}
 	}
 }
+
+

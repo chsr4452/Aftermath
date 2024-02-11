@@ -5,6 +5,7 @@
 
 #include "AmathGameplayAbilityBase.h"
 #include "Aftermath/Character/AftermathCharacterBase.h"
+#include "Aftermath/Character/MainCharacter.h"
 #include "Aftermath/Misc/AmathGameplayTag.h"
 
 void UAftermathAbilitySystemComponent::AbilityActorInfoSet()
@@ -45,9 +46,9 @@ void UAftermathAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& I
 		AbilitySpecInputPressed(AbilitySpec);
 			if(!AbilitySpec.IsActive())
 			{	AActor* Avatar = this->GetAvatarActor();
-				AAftermathCharacterBase* CharacterBase= Cast<AAftermathCharacterBase>(Avatar);
+				AMainCharacter* MainCharacter= Cast<AMainCharacter>(Avatar);
 				
-				if(CharacterBase->IsDead) return;
+				if(MainCharacter->IsDead) return;
 				TryActivateAbility(AbilitySpec.Handle);
 			}
 		}
