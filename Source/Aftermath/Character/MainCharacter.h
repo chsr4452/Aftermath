@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "AftermathCharacterBase.h"
+#include "GameplayTagContainer.h"
+#include "NativeGameplayTags.h"
+
 #include "MainCharacter.generated.h"
 
 class UQuestionWidget;
@@ -12,9 +15,22 @@ class UAftermathUserWidget;
 class UWidgetComponent;
 class UCameraComponent;
 class USpringArmComponent;
+
 /**
  * 
  */
+
+// USTRUCT()
+// struct FQuestionStruct
+// {
+// 	GENERATED_BODY()
+//
+// 	FQuestionStruct(){}
+// 	TArray<FName> InputTagList = {FName("InputTag.LMB"), FName("InputTag.RMB")};
+// 	TArray<int> AnswerList;
+// 	FString* Question = nullptr;
+// };
+
 UCLASS()
 class AFTERMATH_API AMainCharacter : public AAftermathCharacterBase
 {
@@ -34,9 +50,9 @@ public:
 	TObjectPtr<UQuestionWidget> QuestionWidget;
 	
 	UFUNCTION()
-	virtual FString GenerateEquation();
+	virtual void GenerateEquation();
 
-	int Answer{0};
+	
 protected:
 	UPROPERTY()
 	TObjectPtr<UCameraComponent> Camera;
@@ -45,14 +61,18 @@ protected:
 	TObjectPtr<USpringArmComponent> SpringArm;
 
 	void InitAbilitySystemComponent();
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> QuestionBar;
 
-
-
+	TArray<FName> InputTagList = {FName("InputTag.LMB"), FName("InputTag.RMB")};
 	
-	
+public:
+	int RightAnswer{0};
+	int WrongAnswer{0};
+	FName CorrectTag;
+	TArray<int> AnswerList= {RightAnswer, WrongAnswer};
+	FString Equation;
 	
 };
 

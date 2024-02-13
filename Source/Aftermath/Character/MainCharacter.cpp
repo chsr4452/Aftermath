@@ -56,11 +56,9 @@ void AMainCharacter::Tick(float DeltaSeconds)
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	FString const Equation = GenerateEquation();
+	
 	QuestionWidget= Cast<UQuestionWidget>(QuestionBar->GetUserWidgetObject());
-	QuestionWidget->LeftBox->SetText(FText::FromString("Left From C++"));
-	QuestionWidget->MiddleBox->SetText(FText::FromString(Equation));
-	QuestionWidget->RightBox->SetText(FText::FromString("Right From C++"));
+	GenerateEquation();
 }
 
 void AMainCharacter::PossessedBy(AController* NewController)
@@ -108,7 +106,7 @@ void AMainCharacter::InitAbilitySystemComponent()
 	
 }
 
-FString AMainCharacter::GenerateEquation()
+void AMainCharacter::GenerateEquation()
 {
 	int32 a = FMath::RandRange(0, 10);
 	int32 b = FMath::RandRange(1, 10); // Prevent divison by zero error
@@ -118,21 +116,49 @@ FString AMainCharacter::GenerateEquation()
     
 	switch(randomOperator) {
 	case TEXT('+'):
-		Answer = a + b;
+		RightAnswer = a + b;
 		break;
 	case TEXT('-'):
-		Answer = a - b;
+		RightAnswer = a - b;
 		break;
 	case TEXT('*'):
-		Answer = a * b;
+		RightAnswer = a * b;
 		break;
 	case TEXT('/'):
-		Answer = a / b;
+		a *= b;
+		RightAnswer = a / b;
 		break;
 	default:
-		Answer = 0;
+		RightAnswer = 0;
 		break;
 	}
-    
-	return FString::Printf(TEXT("%d %c %d"), a, randomOperator, b);
+	WrongAnswer = RightAnswer + FMath::RandRange(1, 20);
+
+	int RandomZeroOrOne = FMath::RandBool() ? 1 : 0;
+	if(RandomZeroOrOne)
+	{
+		AnswerList = {RightAnswer, WrongAnswer};
+		CorrectTag = InputTagList[0];
+	}
+	else
+	{
+		AnswerList = {WrongAnswer, RightAnswer};
+		CorrectTag = InputTagList[1];
+	}
+	
+	Equation = FString::Printf(TEXT("%d %c %d"), a, randomOperator, b);
+	
+	if(CorrectTag == FName("InputTag.LMB"))
+	{
+		QuestionWidget->LeftBox->SetText(FText::AsNumber(RightAnswer));
+		QuestionWidget->MiddleBox->SetText(FText::FromString(Equation));
+		QuestionWidget->RightBox->SetText(FText::AsNumber(WrongAnswer));
+						
+	}
+	else
+	{
+		QuestionWidget->LeftBox->SetText(FText::AsNumber(WrongAnswer));
+		QuestionWidget->MiddleBox->SetText(FText::FromString(Equation));
+		QuestionWidget->RightBox->SetText(FText::AsNumber(RightAnswer));
+	}
 }

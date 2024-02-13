@@ -6,9 +6,9 @@
 #include "AmathGameplayAbilityBase.h"
 #include "Aftermath/Character/AftermathCharacterBase.h"
 #include "Aftermath/Character/MainCharacter.h"
-#include "Aftermath/Misc/AmathGameplayTag.h"
-#include "Aftermath/Widget/QuestionWidget.h"
-#include "Components/EditableTextBox.h"
+// #include "Aftermath/Misc/AmathGameplayTag.h"
+// #include "Aftermath/Widget/QuestionWidget.h"
+// #include "Components/EditableTextBox.h"
 
 void UAftermathAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -41,24 +41,28 @@ void UAftermathAbilitySystemComponent::AddCharacterAbilities(
 void UAftermathAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if(!InputTag.IsValid()) return;
+	
+
+	
 	for(auto& AbilitySpec : GetActivatableAbilities())
 	{
-		if(AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		if(AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))//{const FGameplayTag&}{TagName="InputTag.LMB"} InputTag.Tagname = "InputTag.LMB"
 		{
 		AbilitySpecInputPressed(AbilitySpec);
 			if(!AbilitySpec.IsActive())
-			{	AActor* Avatar = this->GetAvatarActor();
-
-				//Update Question Widget
-				AMainCharacter* MainCharacter= Cast<AMainCharacter>(Avatar);
-				FString NewEquation = MainCharacter->GenerateEquation();
-				MainCharacter->Answer;
-				MainCharacter->QuestionWidget->LeftBox->SetText(FText::AsNumber(MainCharacter->Answer));
-				MainCharacter->QuestionWidget->MiddleBox->SetText(FText::FromString(NewEquation));
-				MainCharacter->QuestionWidget->RightBox->SetText(FText::AsNumber(MainCharacter->Answer));
+			{	//Update Question Widget
 				
+				AActor* Avatar = this->GetAvatarActor();
+				AMainCharacter* MainCharacter= Cast<AMainCharacter>(Avatar);
 				if(MainCharacter->IsDead) return;
-				TryActivateAbility(AbilitySpec.Handle);
+				
+				if(MainCharacter->CorrectTag == InputTag.GetTagName())
+				{
+					TryActivateAbility(AbilitySpec.Handle);
+					MainCharacter->GenerateEquation();
+					
+				}
+				
 			}
 		}
 	}
