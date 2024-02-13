@@ -9,6 +9,7 @@
 
 #include "MainCharacter.generated.h"
 
+class AAftermathPlayerController;
 class UQuestionWidget;
 class UEditableTextBox;
 class UAftermathUserWidget;
@@ -66,6 +67,8 @@ protected:
 	TObjectPtr<UWidgetComponent> QuestionBar;
 
 	TArray<FName> InputTagList = {FName("InputTag.LMB"), FName("InputTag.RMB")};
+
+	TObjectPtr<AAftermathPlayerController> PC;
 	
 public:
 	int RightAnswer{0};
@@ -73,6 +76,8 @@ public:
 	FName CorrectTag;
 	TArray<int> AnswerList= {RightAnswer, WrongAnswer};
 	FString Equation;
-	
+
+	void CharacterStunt();
+	void EndOfStunt();
 };
 

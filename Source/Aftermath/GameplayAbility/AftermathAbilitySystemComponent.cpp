@@ -62,6 +62,10 @@ void UAftermathAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& I
 					MainCharacter->GenerateEquation();
 					
 				}
+				else
+				{
+					MainCharacter->CharacterStunt();
+				}
 				
 			}
 		}

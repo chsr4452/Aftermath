@@ -8,6 +8,7 @@
 #include "../Misc/CombatInterface.h"
 #include "AftermathCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UGameplayEffect;
 class UGameplayAbility;
 class UAttributeSet;
@@ -47,6 +48,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FVector WeaponTipSocketLocation = FVector(0,0,0);
+
+	UPROPERTY(EditAnywhere, Category = "Effect Stunt")
+	TObjectPtr<UNiagaraSystem> StuntEffect;
+	
+	UPROPERTY(EditAnywhere, Category = "Sound Stunt")
+	TObjectPtr<USoundBase> StuntSound;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;

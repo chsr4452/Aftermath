@@ -4,6 +4,7 @@
 #include "MainCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Aftermath/GameplayAbility/AftermathAbilitySystemComponent.h"
 #include "Aftermath/PlayerController/AftermathPlayerController.h"
 #include "Aftermath/PlayerState/AftermathPlayerState.h"
@@ -14,6 +15,7 @@
 #include "Aftermath/Widget/QuestionWidget.h"
 #include "Components/EditableTextBox.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -92,7 +94,7 @@ void AMainCharacter::InitAbilitySystemComponent()
 	AbilitySystemComponent->InitAbilityActorInfo(AftermathPlayerState, this);
 	AttributeSet = AftermathPlayerState->GetAttributeSet();
 	
-	if(AAftermathPlayerController* PC =  Cast<AAftermathPlayerController>(GetController()))
+	if(PC =  Cast<AAftermathPlayerController>(GetController()))
 	{
 		AAftermathHUD* HUD = PC->GetHUD<AAftermathHUD>();
 		
@@ -104,6 +106,22 @@ void AMainCharacter::InitAbilitySystemComponent()
 	UAftermathAbilitySystemComponent* AftermathAbilitySystemComponent =  Cast<UAftermathAbilitySystemComponent>(AbilitySystemComponent);
 	AftermathAbilitySystemComponent->AbilityActorInfoSet();
 	
+}
+
+void AMainCharacter::CharacterStunt()
+{
+	PC->DisableInput(PC);
+	FTimerHandle UnusedHandle;
+	GetWorldTimerManager().SetTimer(UnusedHandle, this, &AMainCharacter::EndOfStunt, 2.0, false);
+	FVector StuntLocation = GetActorLocation();
+	StuntLocation.Z += 100;
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, StuntEffect, StuntLocation);
+	UGameplayStatics::PlaySoundAtLocation(this, StuntSound, GetActorLocation(), FRotator::ZeroRotator);
+}
+
+void AMainCharacter::EndOfStunt()
+{
+	PC->EnableInput(PC);
 }
 
 void AMainCharacter::GenerateEquation()
